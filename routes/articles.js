@@ -41,7 +41,7 @@ router.put('/:id', async (req, res) => {
 //DELETE
 router.delete('/:id', async (req, res) => {
   try {
-    const article = await Article.findByIdAndDelete(req.params.id);
+    await Article.findByIdAndDelete(req.params.id);
     res.status(200).json('The article has been deleted');
   } catch (err) {
     res.status(500).json(err);
