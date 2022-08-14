@@ -48,14 +48,48 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-//GET ALL ARTICLES
+// //GET ALL ARTICLES
+// router.get('/', async (req, res) => {
+//   try {
+//     const articles = await Article.find();
+//     if (articles.length === 0) {
+//       res.status(404).json('Article is empty');
+//     } else {
+//       res.status(200).json(articles);
+//     }
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
+//GET ARTICLES BY CATEGORY (FILTER & SORT BY POSTING DATE NEWEST TO OLDEST)
 router.get('/', async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const category = req.query.category;
   try {
-    const articles = await Article.find();
-    if (articles.length === 0) {
-      res.status(404).json('Article is empty');
+    if (category) {
+      const articleTotal = await Article.find({ categories: category });
+      const count = articleTotal.length;
+      const articles = await Article.find({ categories: category })
+        .sort({ createdAt: -1 })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
+      res.status(200).json({
+        articles,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+      });
     } else {
-      res.status(200).json(articles);
+      const count = await Article.countDocuments();
+      const articles = await Article.find()
+        .sort({ createdAt: -1 })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
+      res.status(200).json({
+        articles,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+      });
     }
   } catch (err) {
     res.status(500).json(err);
