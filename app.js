@@ -4,12 +4,14 @@ dotenv.config();
 const articleRoute = require('./routes/articles');
 const commentRoute = require('./routes/comments');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 //DECLARATION
 const app = express();
 
 //MIDDLEWARES
 app.use(express.json());
+app.use(cors());
 
 //MONGODB CONNECT
 mongoose
