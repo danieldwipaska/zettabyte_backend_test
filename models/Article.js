@@ -18,11 +18,11 @@ const articleSchema = new mongoose.Schema(
       max: 500,
     },
     img: {
-      type: Array,
+      type: String,
       default: '',
     },
     imgType: {
-      type: Array,
+      type: String,
       default: '',
     },
     categories: {
