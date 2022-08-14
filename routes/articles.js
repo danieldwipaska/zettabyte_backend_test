@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Article = require('../models/Article');
+const Comment = require('../models/Comment');
 
 //validation is handled by front-end
 
@@ -42,27 +43,14 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     await Article.findByIdAndDelete(req.params.id);
+    await Comment.deleteMany({ postId: req.params.id });
     res.status(200).json('The article has been deleted');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-// //GET ALL ARTICLES
-// router.get('/', async (req, res) => {
-//   try {
-//     const articles = await Article.find();
-//     if (articles.length === 0) {
-//       res.status(404).json('Article is empty');
-//     } else {
-//       res.status(200).json(articles);
-//     }
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
-//GET ARTICLES BY CATEGORY (FILTER & SORT BY POSTING DATE NEWEST TO OLDEST)
+//GET ARTICLES BY CATEGORY (FILTER, SORT BY POSTING DATE NEWEST TO OLDEST, AND PAGINATION)
 router.get('/', async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const category = req.query.category;
