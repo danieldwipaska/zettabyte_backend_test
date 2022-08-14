@@ -10,7 +10,6 @@ const articleSchema = new mongoose.Schema(
       type: String,
       max: 100,
       required: true,
-      unique: true,
     },
     desc: {
       type: String,
@@ -26,8 +25,8 @@ const articleSchema = new mongoose.Schema(
       default: '',
     },
     categories: {
-      type: Array,
-      default: [],
+      type: String,
+      default: '',
     },
     content: {
       type: String,
